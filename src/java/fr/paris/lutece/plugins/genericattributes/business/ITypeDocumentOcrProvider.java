@@ -33,12 +33,14 @@
  */
 package fr.paris.lutece.plugins.genericattributes.business;
 
+import java.io.Serializable;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.commons.fileupload.FileItem;
+
 import fr.paris.lutece.util.ReferenceItem;
 import fr.paris.lutece.util.ReferenceList;
-
-import java.io.Serializable;
-
-import java.util.List;
 
 /**
  *
@@ -52,14 +54,14 @@ public interface ITypeDocumentOcrProvider extends Serializable
 {
     /**
      * Gets the key. This key <b>must be unique</b>.
-     * 
+     *
      * @return the key;
      */
     String getKey( );
 
     /**
      * Gets the displayed name
-     * 
+     *
      * @return the displayed name
      */
     String getDisplayedName( );
@@ -67,26 +69,26 @@ public interface ITypeDocumentOcrProvider extends Serializable
     /**
      * Builds a new {@link ReferenceItem} for the type document provider.<br />
      * <code>key == getKey(  )</code>, <code>value == getDisplayedName(  )</code>
-     * 
+     *
      * @return the item created.
      */
     ReferenceItem toRefItem( );
 
     /**
      * returns the Parameter class contains all the parameters of the map
-     * 
+     *
      * @return the Parameter
      */
     Object getParameter( int nKey );
-    
-  
+
+
     /**
      * Gets the list field.
      *
      * @return the list field
      */
     ReferenceList getListField();
-    
+
     /**
      * Gets the field by id.
      *
@@ -94,11 +96,19 @@ public interface ITypeDocumentOcrProvider extends Serializable
      * @return the field by id
      */
     ReferenceItem getFieldById(int idField);
-    
+
     /**
      * Gets the authorized entry type for the document type.
      *
      * @return the authorized type
      */
     List<Integer> getAuthorizedEntryType();
+
+    /**
+     * Call WS OCR with the uploaded file.
+     *
+     * @param fileUploaded fileUploaded
+     * @return the Ocr result
+     */
+    Map<String,String> processOcr(FileItem fileUploaded);
 }

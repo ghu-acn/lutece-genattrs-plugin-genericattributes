@@ -322,6 +322,11 @@ public abstract class AbstractEntryTypeUploadAutomaticFileReading extends EntryT
                 {
                     strFieldError = FIELD_WIDTH;
                 }
+        
+        String strFileType = request.getParameter( PARAMETER_FILE_TYPE );
+        if( "".equals(strFileType) ) {
+        	strFieldError = FIELD_FILE_TYPE;
+        }
 
         if ( StringUtils.isNotBlank( strFieldError ) )
         {

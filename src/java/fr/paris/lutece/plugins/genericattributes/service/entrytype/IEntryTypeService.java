@@ -102,6 +102,7 @@ public interface IEntryTypeService
     String FIELD_NUMBER_ROWS = "genericattributes.createEntry.labelNumberRows";
     String FIELD_NUMBER_COLUMNS = "genericattributes.createEntry.labelNumberColumns";
     String FIELD_CONFIRM_FIELD_TITLE = "genericattributes.createEntry.labelConfirmFieldTitle";
+    String FIELD_FILE_TYPE = "genericattributes.createEntry.fileType";
 
     /**
      * Get the template to display the creation or modification form of an entry of this entry type

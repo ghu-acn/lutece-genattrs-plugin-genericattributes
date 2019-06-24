@@ -123,16 +123,3 @@ CREATE INDEX index_genatt_verify_by_field ON genatt_verify_by (id_field);
 ALTER TABLE genatt_verify_by ADD CONSTRAINT fk_genatt_verify_by_field FOREIGN KEY (id_field)
 	REFERENCES genatt_field (id_field);
 	
--- 
--- Add a new table for the mapping of automatic file reading
--- 
-CREATE TABLE genatt_mapping_file_reading (
-  id_mapping int AUTO_INCREMENT,
-  id_step INT DEFAULT 0 NOT NULL,
-  id_question INT DEFAULT 0 NOT NULL,
-  question_title varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
-  id_field_ocr INT DEFAULT 0 NOT NULL,
-  field_ocr_title varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
-  PRIMARY KEY (id_mapping)
-);
-

@@ -63,17 +63,14 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
 
 import java.awt.image.BufferedImage;
-
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
 import javax.imageio.ImageIO;
-
 import javax.servlet.http.HttpServletRequest;
 
 /**
@@ -93,7 +90,7 @@ public abstract class AbstractEntryTypeUploadAutomaticFileReading extends EntryT
     protected static final String CONSTANT_EXPORT_BINARY = "export_binary";
     protected static final String ALL = "*";
     protected static final String COMMA = ",";
-    protected static final String CONSTANT_FILE_TYPE = "file_type";
+    public static final String CONSTANT_FILE_TYPE = "file_type";
 
     // Private parameters
     private static final String PARAMETER_RESOURCE_TYPE = "resource_type";
@@ -501,7 +498,7 @@ public abstract class AbstractEntryTypeUploadAutomaticFileReading extends EntryT
      */
     private Field buildFieldFileType( Entry entry, HttpServletRequest request )
     {
-        String strFileType = request.getParameter( PARAMETER_FILE_TYPE );
+        String strOcrProvider = request.getParameter( PARAMETER_FILE_TYPE );
         
         Field fieldFileType = GenericAttributesUtils.findFieldByTitleInTheList( CONSTANT_FILE_TYPE, entry.getFields( ) );
 
@@ -511,12 +508,13 @@ public abstract class AbstractEntryTypeUploadAutomaticFileReading extends EntryT
         }
         
         fieldFileType.setTitle( CONSTANT_FILE_TYPE );
-        fieldFileType.setValue(strFileType);
+        fieldFileType.setValue(strOcrProvider);
+
         fieldFileType.setParentEntry( entry );
 
         return fieldFileType;
     }
-
+    
     /**
      * Build the field for file max size
      * 

@@ -33,49 +33,49 @@
  */
 package fr.paris.lutece.plugins.genericattributes.business;
 
-import java.util.List;
-
-import org.apache.commons.lang.StringUtils;
-
 import fr.paris.lutece.portal.service.spring.SpringContextService;
 import fr.paris.lutece.portal.service.util.AppLogService;
 
+import org.apache.commons.lang.StringUtils;
+
+import java.util.List;
+
 /**
- * Manages all type document providers.
+ * Manages all map providers.
  */
-public final class TypeDocumentProviderManager
+public final class OcrProviderManager
 {
     /**
-     * TypeDocumentProviderManager empty constructor
+     * OcrProviderManager empty constructor
      */
-    private TypeDocumentProviderManager( )
+    private OcrProviderManager( )
     {
     }
 
     /**
-     * Gets the TypeDocument for the provided key.
+     * Gets the ocrProvider for the provided key.
      * 
      * @param strKey
      *            the key
-     * @return <code>null</code> if <code>strKey</code> is blank, the TypeDocument provider if found, <code>null</code> otherwise.
+     * @return <code>null</code> if <code>strKey</code> is blank, the ocr provider if found, <code>null</code> otherwise.
      * @see StringUtils#isBlank(String)
      */
-    public static ITypeDocumentOcrProvider getTypeDocumentProvider( String strKey )
+    public static IOcrProvider getOcrProvider( String strKey )
     {
         if ( StringUtils.isBlank( strKey ) )
         {
             return null;
         }
 
-        for ( ITypeDocumentOcrProvider typeDocumentOcr : getTypeDocumentProvidersList( ) )
+        for ( IOcrProvider mapProvider : getOcrProvidersList( ) )
         {
-            if ( strKey.equals( typeDocumentOcr.getKey( ) ) )
+            if ( strKey.equals( mapProvider.getKey( ) ) )
             {
-                return typeDocumentOcr;
+                return mapProvider;
             }
         }
 
-        AppLogService.info( TypeDocumentProviderManager.class.getName( ) + " : No type document provider found for key " + strKey );
+        AppLogService.info( OcrProviderManager.class.getName( ) + " : No ocr provider found for key " + strKey );
 
         return null;
     }
@@ -85,8 +85,8 @@ public final class TypeDocumentProviderManager
      * 
      * @return all available providers
      */
-    public static List<ITypeDocumentOcrProvider> getTypeDocumentProvidersList( )
+    public static List<IOcrProvider> getOcrProvidersList( )
     {
-        return SpringContextService.getBeansOfType( ITypeDocumentOcrProvider.class );
+        return SpringContextService.getBeansOfType( IOcrProvider.class );
     }
 }

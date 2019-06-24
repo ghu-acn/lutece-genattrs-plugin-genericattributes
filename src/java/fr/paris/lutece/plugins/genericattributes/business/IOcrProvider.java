@@ -34,7 +34,6 @@
 package fr.paris.lutece.plugins.genericattributes.business;
 
 import java.io.Serializable;
-import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.fileupload.FileItem;
@@ -44,13 +43,13 @@ import fr.paris.lutece.util.ReferenceList;
 
 /**
  *
- * ITypeDocumentOcrProvider : type document provider for automatic reading of documents<br/>
+ * IOcrProvider : type document provider for automatic reading of documents<br/>
  * <ul>
  * <li><code>getKey(  )</code> must return the unique key.</li>
  * <li><code>getDisplayedName(  )</code> will be displayed in reference lists.</li>
  * </ul>
  */
-public interface ITypeDocumentOcrProvider extends Serializable
+public interface IOcrProvider extends Serializable
 {
     /**
      * Gets the key. This key <b>must be unique</b>.
@@ -65,6 +64,23 @@ public interface ITypeDocumentOcrProvider extends Serializable
      * @return the displayed name
      */
     String getDisplayedName( );
+
+    /**
+     * Gets the html template
+     * @param nIdTargetEntry The File reading entry id
+     * @param strResourceType the resource type
+     * @return the html template
+     */
+    String getHtmlCode( int nIdTargetEntry, String strResourceType );
+    
+    /**
+     * Gets the html template configuration
+     * @param lisEntry The entry list to mapping for prefill
+     * @param nIdTargetEntry The File reading entry id
+     * @param strResourceType the resource type
+     * @return the the html template 
+     */
+    String getConfigHtmlCode( ReferenceList listEntry, int nIdTargetEntry, String strResourceType);
 
     /**
      * Builds a new {@link ReferenceItem} for the type document provider.<br />
@@ -98,17 +114,11 @@ public interface ITypeDocumentOcrProvider extends Serializable
     ReferenceItem getFieldById(int idField);
 
     /**
-     * Gets the authorized entry type for the document type.
-     *
-     * @return the authorized type
-     */
-    List<Integer> getAuthorizedEntryType();
-
-    /**
      * Call WS OCR with the uploaded file.
      *
      * @param fileUploaded fileUploaded
      * @return the Ocr result
      */
-    Map<String,String> processOcr(FileItem fileUploaded);
+    Map<String,String> process(FileItem fileUploaded);
+  
 }

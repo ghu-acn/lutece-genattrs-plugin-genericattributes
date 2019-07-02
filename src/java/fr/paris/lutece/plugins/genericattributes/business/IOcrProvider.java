@@ -34,7 +34,7 @@
 package fr.paris.lutece.plugins.genericattributes.business;
 
 import java.io.Serializable;
-import java.util.Map;
+import java.util.List;
 
 import org.apache.commons.fileupload.FileItem;
 
@@ -117,8 +117,10 @@ public interface IOcrProvider extends Serializable
      * Call WS OCR with the uploaded file.
      *
      * @param fileUploaded fileUploaded
+     * @param nIdTargetEntry The File reading entry id
+     * @param strResourceType the resource type
      * @return the Ocr result
      */
-    Map<String,String> process(FileItem fileUploaded);
+    List<Response> process(FileItem fileUploaded, int nIdTargetEntry, String strResourceType);
   
 }

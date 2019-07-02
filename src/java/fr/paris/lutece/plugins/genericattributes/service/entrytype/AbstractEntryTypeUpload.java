@@ -63,17 +63,14 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
 
 import java.awt.image.BufferedImage;
-
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
 import javax.imageio.ImageIO;
-
 import javax.servlet.http.HttpServletRequest;
 
 /**
@@ -86,6 +83,8 @@ public abstract class AbstractEntryTypeUpload extends EntryTypeService
     protected static final String PARAMETER_MAX_FILES = "max_files";
     protected static final String PARAMETER_FILE_MAX_SIZE = "file_max_size";
     protected static final String PARAMETER_EXPORT_BINARY = "export_binary";
+    protected static final String PARAMETER_FILE_TYPE = "file_type";
+
 
     // CONSTANTS
     protected static final String CONSTANT_MAX_FILES = "max_files";
@@ -93,7 +92,9 @@ public abstract class AbstractEntryTypeUpload extends EntryTypeService
     protected static final String CONSTANT_EXPORT_BINARY = "export_binary";
     protected static final String ALL = "*";
     protected static final String COMMA = ",";
+    public static final String CONSTANT_FILE_TYPE = "file_type";
 
+    
     // Private parameters
     private static final String PARAMETER_RESOURCE_TYPE = "resource_type";
     private static final String PARAMETER_ID = "id";
@@ -528,7 +529,7 @@ public abstract class AbstractEntryTypeUpload extends EntryTypeService
      *            the HTTP request
      * @return the field
      */
-    private Field buildFieldMaxFiles( Entry entry, HttpServletRequest request )
+    protected Field buildFieldMaxFiles( Entry entry, HttpServletRequest request )
     {
         String strMaxFiles = request.getParameter( PARAMETER_MAX_FILES );
         int nMaxFiles = GenericAttributesUtils.convertStringToInt( strMaxFiles );
@@ -555,7 +556,7 @@ public abstract class AbstractEntryTypeUpload extends EntryTypeService
      *            the HTTP request
      * @return the field
      */
-    private Field buildFieldFileMaxSize( Entry entry, HttpServletRequest request )
+    protected Field buildFieldFileMaxSize( Entry entry, HttpServletRequest request )
     {
         String strFileMaxSize = request.getParameter( PARAMETER_FILE_MAX_SIZE );
         int nFileMaxSize = GenericAttributesUtils.convertStringToInt( strFileMaxSize );
@@ -582,7 +583,7 @@ public abstract class AbstractEntryTypeUpload extends EntryTypeService
      *            the HTTP request
      * @return the default field
      */
-    private Field buildDefaultField( Entry entry, HttpServletRequest request )
+    protected Field buildDefaultField( Entry entry, HttpServletRequest request )
     {
         String strWidth = request.getParameter( PARAMETER_WIDTH );
         int nWidth = GenericAttributesUtils.convertStringToInt( strWidth );
@@ -609,7 +610,7 @@ public abstract class AbstractEntryTypeUpload extends EntryTypeService
      *            the HTTP request
      * @return the field
      */
-    private Field buildExportBinaryField( Entry entry, HttpServletRequest request )
+    protected Field buildExportBinaryField( Entry entry, HttpServletRequest request )
     {
         String strExportBinary = request.getParameter( PARAMETER_EXPORT_BINARY );
         Field field = GenericAttributesUtils.findFieldByTitleInTheList( CONSTANT_EXPORT_BINARY, entry.getFields( ) );

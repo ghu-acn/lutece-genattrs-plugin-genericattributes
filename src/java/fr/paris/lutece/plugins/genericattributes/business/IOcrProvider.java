@@ -120,7 +120,8 @@ public interface IOcrProvider extends Serializable
      * @param nIdTargetEntry The File reading entry id
      * @param strResourceType the resource type
      * @return the Ocr result
+     * @throws Exception 
      */
-    List<Response> process(FileItem fileUploaded, int nIdTargetEntry, String strResourceType);
+    List<Response> process(FileItem fileUploaded, int nIdTargetEntry, String strResourceType) throws Exception;
   
 }

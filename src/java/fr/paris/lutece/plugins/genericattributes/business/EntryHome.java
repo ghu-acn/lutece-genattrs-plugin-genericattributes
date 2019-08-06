@@ -33,7 +33,10 @@
  */
 package fr.paris.lutece.plugins.genericattributes.business;
 
+import fr.paris.lutece.plugins.genericattributes.util.CopyEntryEventParam;
 import fr.paris.lutece.plugins.genericattributes.util.GenericAttributesUtils;
+import fr.paris.lutece.portal.business.event.ResourceEvent;
+import fr.paris.lutece.portal.service.event.ResourceEventManager;
 import fr.paris.lutece.portal.service.plugin.Plugin;
 import fr.paris.lutece.portal.service.spring.SpringContextService;
 import fr.paris.lutece.portal.service.util.AppException;
@@ -79,6 +82,7 @@ public final class EntryHome
      */
     public static Entry copy( Entry entry )
     {
+    	int oldId = entry.getIdEntry( );
         Entry entryCopy = (Entry) entry.clone( );
         List<Field> listField = FieldHome.getFieldListByIdEntry( entry.getIdEntry( ) );
 
@@ -113,7 +117,12 @@ public final class EntryHome
                     copy( entryChild );
                 }
             }
-
+            ResourceEvent event = new ResourceEvent( );
+            event.setIdResource( String.valueOf( entryCopy.getIdEntry( ) ) );
+            event.setTypeResource( entry.getResourceType( ) );
+            event.setParam( new CopyEntryEventParam( oldId ) );
+            ResourceEventManager.fireAddedResource( event );
+            
             TransactionManager.commitTransaction( getPlugin( ) );
             return entryCopy;
         }
@@ -133,6 +142,10 @@ public final class EntryHome
     public static void update( Entry entry )
     {
         _dao.store( entry, getPlugin( ) );
+        ResourceEvent event = new ResourceEvent( );
+        event.setIdResource( String.valueOf( entry.getIdEntry( ) ) );
+        event.setTypeResource( entry.getResourceType( ) );
+        ResourceEventManager.fireUpdatedResource( event );
     }
 
     /**
@@ -165,6 +178,12 @@ public final class EntryHome
                 }
 
                 _dao.delete( nIdEntry, getPlugin( ) );
+                
+                ResourceEvent event = new ResourceEvent( );
+                event.setIdResource( String.valueOf( nIdEntry ) );
+                event.setTypeResource( entry.getResourceType( ) );
+                ResourceEventManager.fireDeletedResource( event );
+                
                 TransactionManager.commitTransaction( getPlugin( ) );
             }
             catch( Exception e )
@@ -218,6 +237,18 @@ public final class EntryHome
         }
 
         return entry;
+    }
+    
+    /**
+     * Returns a list of a Entry whose identifier is specified in parameter
+     * 
+     * @param idList
+     *            The primary keys
+     * @return an instance of Entry
+     */
+    public static List<Entry> findByPrimaryKeyList( List<Integer> idList )
+    {
+    	return _dao.loadMultiple( idList, getPlugin( ) );
     }
 
     /**

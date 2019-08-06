@@ -95,7 +95,7 @@ ALTER TABLE genatt_field ADD CONSTRAINT fk_genatt_field_entry FOREIGN KEY (id_en
 -- Table structure for table genatt_response
 --
 CREATE TABLE genatt_response (
-	id_response int default 0 NOT NULL,
+	id_response int AUTO_INCREMENT,
 	response_value long VARCHAR DEFAULT NULL,
 	id_entry int default NULL,
 	iteration_number int default -1,

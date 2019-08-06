@@ -37,6 +37,7 @@ import fr.paris.lutece.portal.business.file.File;
 import fr.paris.lutece.portal.service.plugin.Plugin;
 import fr.paris.lutece.util.sql.DAOUtil;
 
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,7 +47,6 @@ import java.util.List;
 public final class ResponseDAO implements IResponseDAO
 {
     // Constants
-    private static final String SQL_QUERY_NEW_PK = " SELECT MAX( id_response ) FROM genatt_response ";
     private static final String SQL_QUERY_SELECT_RESPONSE = "SELECT resp.id_response, resp.response_value, type.class_name, ent.id_type, ent.id_entry, ent.title, ent.code, "
             + " resp.iteration_number, resp.id_field, resp.id_file, resp.status FROM genatt_response resp";
     private static final String SQL_QUERY_FIND_BY_PRIMARY_KEY = SQL_QUERY_SELECT_RESPONSE + ", genatt_entry ent, genatt_entry_type type "
@@ -54,7 +54,7 @@ public final class ResponseDAO implements IResponseDAO
     private static final String SQL_QUERY_SELECT_RESPONSE_BY_FILTER = SQL_QUERY_SELECT_RESPONSE + ", genatt_entry ent, genatt_entry_type type "
             + " WHERE resp.id_entry = ent.id_entry and ent.id_type = type.id_type ";
     private static final String SQL_QUERY_INSERT = "INSERT INTO genatt_response ( "
-            + " id_response, response_value, id_entry, iteration_number, id_field, id_file, status ) VALUES ( ?,?,?,?,?,?,? )";
+            + " response_value, id_entry, iteration_number, id_field, id_file, status ) VALUES ( ?,?,?,?,?,?)";
     private static final String SQL_QUERY_UPDATE = "UPDATE genatt_response SET response_value = ?, id_entry = ?, iteration_number = ?, id_field = ?, id_file = ?, status = ? WHERE id_response = ?";
     private static final String SQL_QUERY_DELETE = "DELETE FROM genatt_response WHERE id_response = ? ";
     private static final String SQL_QUERY_SELECT_COUNT_RESPONSE_BY_ID_ENTRY = " SELECT field.title, COUNT( resp.id_response )"
@@ -75,31 +75,7 @@ public final class ResponseDAO implements IResponseDAO
     private static final String SQL_ASC = " ASC ";
     private static final String SQL_DESC = " DESC ";
 
-    /**
-     * Generates a new primary key
-     *
-     * @param plugin
-     *            the plugin
-     * @return The new primary key
-     */
-    private int newPrimaryKey( Plugin plugin )
-    {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_NEW_PK, plugin );
-        daoUtil.executeQuery( );
-
-        int nKey;
-
-        if ( !daoUtil.next( ) )
-        {
-            // if the table is empty
-            nKey = 1;
-        }
-
-        nKey = daoUtil.getInt( 1 ) + 1;
-        daoUtil.free( );
-
-        return nKey;
-    }
+ 
 
     /**
      * {@inheritDoc}
@@ -108,10 +84,9 @@ public final class ResponseDAO implements IResponseDAO
     public synchronized void insert( Response response, Plugin plugin )
     {
         int nIndex = 1;
-        response.setIdResponse( newPrimaryKey( plugin ) );
 
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_INSERT, plugin );
-        daoUtil.setInt( nIndex++, response.getIdResponse( ) );
+        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_INSERT, Statement.RETURN_GENERATED_KEYS, plugin );
+       // daoUtil.setInt( nIndex++, response.getIdResponse( ) );
         daoUtil.setString( nIndex++, removeInvalidChars( response.getResponseValue( ) ) );
         daoUtil.setInt( nIndex++, response.getEntry( ).getIdEntry( ) );
         daoUtil.setInt( nIndex++, response.getIterationNumber( ) );
@@ -137,6 +112,11 @@ public final class ResponseDAO implements IResponseDAO
         daoUtil.setInt( nIndex, Response.CONSTANT_STATUS_ACTIVE );
 
         daoUtil.executeUpdate( );
+        
+        if ( daoUtil.nextGeneratedKey( ) )
+        {
+        	response.setIdResponse( daoUtil.getGeneratedKeyInt( 1 ) );
+        }
 
         daoUtil.free( );
     }

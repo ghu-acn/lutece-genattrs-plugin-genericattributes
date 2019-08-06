@@ -33,15 +33,16 @@
  */
 package fr.paris.lutece.plugins.genericattributes.business;
 
-import fr.paris.lutece.portal.service.plugin.Plugin;
-import fr.paris.lutece.util.sql.DAOUtil;
-
-import org.apache.commons.lang.StringUtils;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+
+import org.apache.commons.lang.StringUtils;
+
+import fr.paris.lutece.portal.service.plugin.Plugin;
+import fr.paris.lutece.util.sql.DAOUtil;
 
 /**
  * This class provides Data Access methods for Entry objects
@@ -96,6 +97,7 @@ public final class EntryDAO implements IEntryDAO
     private static final String SQL_QUERY_SELECT_ENTRY_BY_FORM = "SELECT id_entry, title FROM genatt_entry WHERE id_resource = ? AND title IS NOT NULL ORDER BY id_entry ";
     private static final String SQL_QUERY_SELECT_ENTRY_VALUE = "SELECT title FROM genatt_response INNER JOIN genatt_field ON genatt_response.id_field = genatt_field.id_field "
             + "	WHERE genatt_response.id_entry = ? AND genatt_response.id_response = ? AND title IS NOT NULL  ORDER BY genatt_response.id_entry ";
+    private static final String SQL_QUERY_FIND_BY_PRIMARY_KEY_LIST = SQL_QUERY_SELECT_ENTRY_ATTRIBUTES + " AND ent.id_entry IN ( ";
 
     /**
      * {@inheritDoc}
@@ -188,6 +190,28 @@ public final class EntryDAO implements IEntryDAO
         }
 
         return entry;
+    }
+    
+    @Override
+    public List<Entry> loadMultiple( List<Integer> idList, Plugin plugin )
+    {
+    	List<Entry> list = new ArrayList<>( );
+    	String query = SQL_QUERY_FIND_BY_PRIMARY_KEY_LIST + idList.stream( ).distinct( ).map( i -> "?" ).collect( Collectors.joining( "," ) ) + " )";
+    	
+    	try (  DAOUtil daoUtil = new DAOUtil( query, plugin ) )
+    	{
+    		for ( int i = 0; i < idList.size( ); i++ )
+    		{
+    			daoUtil.setInt( i + 1 , idList.get( i ) );
+    		}
+    		daoUtil.executeQuery( );
+    		
+    		while ( daoUtil.next( ) )
+            {
+    			list.add( getEntryValues( daoUtil ) );
+            }
+    	}
+    	return list;
     }
 
     /**
